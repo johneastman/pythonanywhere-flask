@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, Response, request, make_response
 import os
 import json
 
@@ -11,16 +11,20 @@ def lists():
     file_path = os.path.join(project_folder, "data.json")
 
     if request.method == "GET":
-        with open(file_path, "r") as file:
-            file_content = file.read()
-            return json.loads(file_content)
+        try:
+            with open(file_path, "r") as file:
+                file_content = file.read()
+                body = json.loads(file_content)
+                return make_response(body, 200)
+        except FileNotFoundError:
+            return make_response({"message": "File not found"}, 404)
 
     # Save Data
     with open(file_path, "w") as file:
         file_content = json.dumps(request.json)
         file.write(file_content)
 
-    return {"message": "OK"}
+    return make_response({"message": "OK"}, 200)
 
 
 if __name__ == "__main__":
