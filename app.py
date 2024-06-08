@@ -5,10 +5,10 @@ import json
 app = Flask(__name__)
 
 
-@app.route("/lists", methods=["GET", "POST"])
-def lists():
+@app.route("/lists/<username>", methods=["GET", "POST"])
+def lists(username):
     project_folder = os.path.expanduser(app.root_path)
-    file_path = os.path.join(project_folder, "data.json")
+    file_path = os.path.join(project_folder, f"{username}.json")
 
     # Get Data
     if request.method == "GET":
